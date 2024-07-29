@@ -1,0 +1,266 @@
+<!--- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Complaint Form</title>
+    <style>
+        table {
+            border: solid;
+            border-radius: 18px;
+            border-spacing: 15px;
+        }
+        body {
+            padding: 100px;
+        }
+        table .btn-submit {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <form id="complaintForm">
+        <table align="center">
+            <tr>
+                <th>COMPLAINT FORM</th>
+            </tr>
+            <tr>
+                <td>Name</td>
+                <td><input type="text" id="name" name="name" required></td>
+            </tr>
+            <tr>
+                <td>Email</td>
+                <td><input type="email" id="email" name="email" required></td>
+            </tr>
+            <tr>
+                <td>Phone Number</td>
+                <td><input type="tel" id="phone" name="phone" required></td>
+            </tr>
+            <tr>
+                <td>Complaint Category</td>
+                <td>
+                    <select id="category" name="category" required>
+                        <option value="">Select</option>
+                        <option value="Lost Luggage">Lost Luggage</option>
+                        <option value="Flight Delay">Flight Delay</option>
+                        <option value="Service Issues">Service Issues</option>
+                        <option value="Others">Others</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>Details</td>
+                <td><textarea id="details" name="details" style="height: 100px;" required></textarea></td>
+            </tr>
+            <tr>
+                <td>Date of the Incident</td>
+                <td><input type="date" id="incident" name="incident" required></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td><button type="submit" class="btn-submit">Submit</button></td>
+            </tr>
+        </table>
+    </form>
+    
+    <script src="https://cdn.socket.io/4.3.2/socket.io.min.js"></script>
+    <script>
+        const form = document.getElementById('complaintForm');
+        const socket = io('http://localhost:3000');
+
+        form.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            const formData = {
+                name: document.getElementById('name').value,
+                email: document.getElementById('email').value,
+                phone: document.getElementById('phone').value,
+                category: document.getElementById('category').value || 'Others',
+                details: document.getElementById('details').value,
+                incident: document.getElementById('incident').value
+            };
+
+            console.log('Submitting complaint:', formData); 
+
+            const response = await fetch('http://localhost:3000/complaint', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(formData),
+            });
+
+            if (response.ok) {
+            alert('Complaint submitted successfully!');
+            socket.emit('newComplaint', formData);  // Emit the new complaint event
+             } else {
+            const errorText = await response.text();
+            console.error('Failed to submit complaint:', errorText);
+            alert('Failed to submit complaint.');
+            }
+           });
+
+        socket.on('newComplaint', (complaint) => {
+            fetchComplaints();
+        });
+
+        async function fetchComplaints(category= '') {
+            const response = await fetch(`http://localhost:3000/ccomplaint${category ? '?category=' + encodeURIComponent(category) : ''}`);
+            const complaints = await response.json();
+            // You can update your UI to show the complaints here if needed.
+        }
+
+        fetchComplaints();
+    </script>
+</body>
+</html>--->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Complaint Form</title>
+    <style>
+        table {
+            border: solid;
+            border-radius: 18px;
+            border-spacing: 15px;
+        }
+        body {
+            margin: 0;
+        }
+        /* Header styles */
+        header {
+            background-color: #007bff;
+            color: #fff;
+            padding: 20px;
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            max-width: 3000px;
+        }
+
+        .company-logo {
+            width: 100px; /* Adjust size as needed */
+            height: auto; /* Maintain aspect ratio */
+            margin-right: 20px; /* Space between logo and heading */
+        }
+
+        .header-content h1 {
+            font-size: 24px;
+            font-weight: bold;
+            margin: 0;
+            padding:0;
+        }
+        table .btn-submit {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <img src="logo.jpg" alt="Company Logo" class="company-logo">
+            <h1 style="padding-right:500px;">AIRPORTS AUTHORITY OF INDIA, KANGRA</h1>
+        </div>
+    </header>
+    <form id="complaintForm" style="padding-top: 50px;">
+        <table align="center">
+            <tr>
+                <th>COMPLAINT FORM</th>
+            </tr>
+            <tr>
+                <td>Name</td>
+                <td><input type="text" id="name" name="name" required></td>
+            </tr>
+            <tr>
+                <td>Email</td>
+                <td><input type="email" id="email" name="email" required></td>
+            </tr>
+            <tr>
+                <td>Phone Number</td>
+                <td><input type="tel" id="phone" name="phone" required></td>
+            </tr>
+            <tr>
+                <td>Complaint Category</td>
+                <td>
+                    <select id="category" name="category" required>
+                        <option value="">Select</option>
+                        <option value="Lost Luggage">Lost Luggage</option>
+                        <option value="Flight Delay">Flight Delay</option>
+                        <option value="Service Issues">Service Issues</option>
+                        <option value="Others">Others</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>Details</td>
+                <td><textarea id="details" name="details" style="height: 100px;" required></textarea></td>
+            </tr>
+            <tr>
+                <td>Flight Number</td>
+                <td><input type="text" id="flightnumber"name="flightnumber" pattern="[A-Z0-9]+" ></td>
+            </tr>
+            <tr>
+                <td>Date of the Incident</td>
+                <td><input type="date" id="incident" name="incident" required></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td><button type="submit" class="btn-submit">Submit</button></td>
+            </tr>
+        </table>
+    </form>
+    
+    <script src="https://cdn.socket.io/4.3.2/socket.io.min.js"></script>
+    <script>
+        const form = document.getElementById('complaintForm');
+        const socket = io('http://localhost:3000');
+
+        form.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            const formData = {
+                name: document.getElementById('name').value,
+                email: document.getElementById('email').value,
+                phone: document.getElementById('phone').value,
+                category: document.getElementById('category').value || 'Others',
+                details: document.getElementById('details').value,
+                incident: document.getElementById('incident').value,
+                flightnumber: document.getElementById('flightnumber').value
+            };
+
+            console.log('Submitting complaint:', formData); 
+
+            const response = await fetch('http://localhost:3000/complaint', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(formData),
+            });
+
+            if (response.ok) {
+            alert('Complaint submitted successfully!');
+            socket.emit('newComplaint', formData);  // Emit the new complaint event
+             } else {
+            const errorText = await response.text();
+            console.error('Failed to submit complaint:', errorText);
+            alert('Failed to submit complaint.');
+            }
+           });
+
+        socket.on('newComplaint', (complaint) => {
+            fetchComplaints();
+        });
+
+        async function fetchComplaints(category= '') {
+            const response = await fetch(`http://localhost:3000/complaint${category ? '?category=' + encodeURIComponent(category) : ''}`);
+            const complaints = await response.json();
+            // You can update your UI to show the complaints here if needed.
+        }
+
+        fetchComplaints();
+    </script>
+</body>
+</html>
+
